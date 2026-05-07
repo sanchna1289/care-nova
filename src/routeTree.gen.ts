@@ -9,38 +9,248 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SymptomsRouteImport } from './routes/symptoms'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as HospitalRouteImport } from './routes/hospital'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as EmergencyRouteImport } from './routes/emergency'
+import { Route as BenefitsRouteImport } from './routes/benefits'
+import { Route as AppointmentRouteImport } from './routes/appointment'
+import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResultModerateRouteImport } from './routes/result.moderate'
+import { Route as ResultMildRouteImport } from './routes/result.mild'
 
+const SymptomsRoute = SymptomsRouteImport.update({
+  id: '/symptoms',
+  path: '/symptoms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HospitalRoute = HospitalRouteImport.update({
+  id: '/hospital',
+  path: '/hospital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmergencyRoute = EmergencyRouteImport.update({
+  id: '/emergency',
+  path: '/emergency',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BenefitsRoute = BenefitsRouteImport.update({
+  id: '/benefits',
+  path: '/benefits',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppointmentRoute = AppointmentRouteImport.update({
+  id: '/appointment',
+  path: '/appointment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalysisRoute = AnalysisRouteImport.update({
+  id: '/analysis',
+  path: '/analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResultModerateRoute = ResultModerateRouteImport.update({
+  id: '/result/moderate',
+  path: '/result/moderate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultMildRoute = ResultMildRouteImport.update({
+  id: '/result/mild',
+  path: '/result/mild',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analysis': typeof AnalysisRoute
+  '/appointment': typeof AppointmentRoute
+  '/benefits': typeof BenefitsRoute
+  '/emergency': typeof EmergencyRoute
+  '/home': typeof HomeRoute
+  '/hospital': typeof HospitalRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
+  '/symptoms': typeof SymptomsRoute
+  '/result/mild': typeof ResultMildRoute
+  '/result/moderate': typeof ResultModerateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analysis': typeof AnalysisRoute
+  '/appointment': typeof AppointmentRoute
+  '/benefits': typeof BenefitsRoute
+  '/emergency': typeof EmergencyRoute
+  '/home': typeof HomeRoute
+  '/hospital': typeof HospitalRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
+  '/symptoms': typeof SymptomsRoute
+  '/result/mild': typeof ResultMildRoute
+  '/result/moderate': typeof ResultModerateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analysis': typeof AnalysisRoute
+  '/appointment': typeof AppointmentRoute
+  '/benefits': typeof BenefitsRoute
+  '/emergency': typeof EmergencyRoute
+  '/home': typeof HomeRoute
+  '/hospital': typeof HospitalRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
+  '/symptoms': typeof SymptomsRoute
+  '/result/mild': typeof ResultMildRoute
+  '/result/moderate': typeof ResultModerateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/analysis'
+    | '/appointment'
+    | '/benefits'
+    | '/emergency'
+    | '/home'
+    | '/hospital'
+    | '/onboarding'
+    | '/profile'
+    | '/symptoms'
+    | '/result/mild'
+    | '/result/moderate'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/analysis'
+    | '/appointment'
+    | '/benefits'
+    | '/emergency'
+    | '/home'
+    | '/hospital'
+    | '/onboarding'
+    | '/profile'
+    | '/symptoms'
+    | '/result/mild'
+    | '/result/moderate'
+  id:
+    | '__root__'
+    | '/'
+    | '/analysis'
+    | '/appointment'
+    | '/benefits'
+    | '/emergency'
+    | '/home'
+    | '/hospital'
+    | '/onboarding'
+    | '/profile'
+    | '/symptoms'
+    | '/result/mild'
+    | '/result/moderate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalysisRoute: typeof AnalysisRoute
+  AppointmentRoute: typeof AppointmentRoute
+  BenefitsRoute: typeof BenefitsRoute
+  EmergencyRoute: typeof EmergencyRoute
+  HomeRoute: typeof HomeRoute
+  HospitalRoute: typeof HospitalRoute
+  OnboardingRoute: typeof OnboardingRoute
+  ProfileRoute: typeof ProfileRoute
+  SymptomsRoute: typeof SymptomsRoute
+  ResultMildRoute: typeof ResultMildRoute
+  ResultModerateRoute: typeof ResultModerateRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/symptoms': {
+      id: '/symptoms'
+      path: '/symptoms'
+      fullPath: '/symptoms'
+      preLoaderRoute: typeof SymptomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hospital': {
+      id: '/hospital'
+      path: '/hospital'
+      fullPath: '/hospital'
+      preLoaderRoute: typeof HospitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/emergency': {
+      id: '/emergency'
+      path: '/emergency'
+      fullPath: '/emergency'
+      preLoaderRoute: typeof EmergencyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/benefits': {
+      id: '/benefits'
+      path: '/benefits'
+      fullPath: '/benefits'
+      preLoaderRoute: typeof BenefitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/appointment': {
+      id: '/appointment'
+      path: '/appointment'
+      fullPath: '/appointment'
+      preLoaderRoute: typeof AppointmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analysis': {
+      id: '/analysis'
+      path: '/analysis'
+      fullPath: '/analysis'
+      preLoaderRoute: typeof AnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +258,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/result/moderate': {
+      id: '/result/moderate'
+      path: '/result/moderate'
+      fullPath: '/result/moderate'
+      preLoaderRoute: typeof ResultModerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/result/mild': {
+      id: '/result/mild'
+      path: '/result/mild'
+      fullPath: '/result/mild'
+      preLoaderRoute: typeof ResultMildRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalysisRoute: AnalysisRoute,
+  AppointmentRoute: AppointmentRoute,
+  BenefitsRoute: BenefitsRoute,
+  EmergencyRoute: EmergencyRoute,
+  HomeRoute: HomeRoute,
+  HospitalRoute: HospitalRoute,
+  OnboardingRoute: OnboardingRoute,
+  ProfileRoute: ProfileRoute,
+  SymptomsRoute: SymptomsRoute,
+  ResultMildRoute: ResultMildRoute,
+  ResultModerateRoute: ResultModerateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
