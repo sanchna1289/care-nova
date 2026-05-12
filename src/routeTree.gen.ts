@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestsRouteImport } from './routes/tests'
 import { Route as SymptomsRouteImport } from './routes/symptoms'
+import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as HospitalRouteImport } from './routes/hospital'
@@ -18,13 +20,24 @@ import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as BenefitsRouteImport } from './routes/benefits'
 import { Route as AppointmentRouteImport } from './routes/appointment'
 import { Route as AnalysisRouteImport } from './routes/analysis'
+import { Route as AmbulanceRouteImport } from './routes/ambulance'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResultModerateRouteImport } from './routes/result.moderate'
 import { Route as ResultMildRouteImport } from './routes/result.mild'
 
+const TestsRoute = TestsRouteImport.update({
+  id: '/tests',
+  path: '/tests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SymptomsRoute = SymptomsRouteImport.update({
   id: '/symptoms',
   path: '/symptoms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RemindersRoute = RemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -67,6 +80,11 @@ const AnalysisRoute = AnalysisRouteImport.update({
   path: '/analysis',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AmbulanceRoute = AmbulanceRouteImport.update({
+  id: '/ambulance',
+  path: '/ambulance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -85,6 +103,7 @@ const ResultMildRoute = ResultMildRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ambulance': typeof AmbulanceRoute
   '/analysis': typeof AnalysisRoute
   '/appointment': typeof AppointmentRoute
   '/benefits': typeof BenefitsRoute
@@ -93,12 +112,15 @@ export interface FileRoutesByFullPath {
   '/hospital': typeof HospitalRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/reminders': typeof RemindersRoute
   '/symptoms': typeof SymptomsRoute
+  '/tests': typeof TestsRoute
   '/result/mild': typeof ResultMildRoute
   '/result/moderate': typeof ResultModerateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ambulance': typeof AmbulanceRoute
   '/analysis': typeof AnalysisRoute
   '/appointment': typeof AppointmentRoute
   '/benefits': typeof BenefitsRoute
@@ -107,13 +129,16 @@ export interface FileRoutesByTo {
   '/hospital': typeof HospitalRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/reminders': typeof RemindersRoute
   '/symptoms': typeof SymptomsRoute
+  '/tests': typeof TestsRoute
   '/result/mild': typeof ResultMildRoute
   '/result/moderate': typeof ResultModerateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ambulance': typeof AmbulanceRoute
   '/analysis': typeof AnalysisRoute
   '/appointment': typeof AppointmentRoute
   '/benefits': typeof BenefitsRoute
@@ -122,7 +147,9 @@ export interface FileRoutesById {
   '/hospital': typeof HospitalRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/reminders': typeof RemindersRoute
   '/symptoms': typeof SymptomsRoute
+  '/tests': typeof TestsRoute
   '/result/mild': typeof ResultMildRoute
   '/result/moderate': typeof ResultModerateRoute
 }
@@ -130,6 +157,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ambulance'
     | '/analysis'
     | '/appointment'
     | '/benefits'
@@ -138,12 +166,15 @@ export interface FileRouteTypes {
     | '/hospital'
     | '/onboarding'
     | '/profile'
+    | '/reminders'
     | '/symptoms'
+    | '/tests'
     | '/result/mild'
     | '/result/moderate'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ambulance'
     | '/analysis'
     | '/appointment'
     | '/benefits'
@@ -152,12 +183,15 @@ export interface FileRouteTypes {
     | '/hospital'
     | '/onboarding'
     | '/profile'
+    | '/reminders'
     | '/symptoms'
+    | '/tests'
     | '/result/mild'
     | '/result/moderate'
   id:
     | '__root__'
     | '/'
+    | '/ambulance'
     | '/analysis'
     | '/appointment'
     | '/benefits'
@@ -166,13 +200,16 @@ export interface FileRouteTypes {
     | '/hospital'
     | '/onboarding'
     | '/profile'
+    | '/reminders'
     | '/symptoms'
+    | '/tests'
     | '/result/mild'
     | '/result/moderate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AmbulanceRoute: typeof AmbulanceRoute
   AnalysisRoute: typeof AnalysisRoute
   AppointmentRoute: typeof AppointmentRoute
   BenefitsRoute: typeof BenefitsRoute
@@ -181,18 +218,34 @@ export interface RootRouteChildren {
   HospitalRoute: typeof HospitalRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
+  RemindersRoute: typeof RemindersRoute
   SymptomsRoute: typeof SymptomsRoute
+  TestsRoute: typeof TestsRoute
   ResultMildRoute: typeof ResultMildRoute
   ResultModerateRoute: typeof ResultModerateRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tests': {
+      id: '/tests'
+      path: '/tests'
+      fullPath: '/tests'
+      preLoaderRoute: typeof TestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/symptoms': {
       id: '/symptoms'
       path: '/symptoms'
       fullPath: '/symptoms'
       preLoaderRoute: typeof SymptomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reminders': {
+      id: '/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof RemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -251,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalysisRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ambulance': {
+      id: '/ambulance'
+      path: '/ambulance'
+      fullPath: '/ambulance'
+      preLoaderRoute: typeof AmbulanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -277,6 +337,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AmbulanceRoute: AmbulanceRoute,
   AnalysisRoute: AnalysisRoute,
   AppointmentRoute: AppointmentRoute,
   BenefitsRoute: BenefitsRoute,
@@ -285,7 +346,9 @@ const rootRouteChildren: RootRouteChildren = {
   HospitalRoute: HospitalRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
+  RemindersRoute: RemindersRoute,
   SymptomsRoute: SymptomsRoute,
+  TestsRoute: TestsRoute,
   ResultMildRoute: ResultMildRoute,
   ResultModerateRoute: ResultModerateRoute,
 }
