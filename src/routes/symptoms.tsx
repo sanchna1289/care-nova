@@ -9,12 +9,17 @@ export const Route = createFileRoute("/symptoms")({
 
 function Symptoms() {
   const [listening, setListening] = useState(false);
-  const [text, setText] = useState("");
+  const [finalText, setFinalText] = useState("");
+  const [interimText, setInterimText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [supported, setSupported] = useState(true);
   const [lang, setLang] = useState("en-US");
   const recognitionRef = useRef<any>(null);
+  const finalRef = useRef("");
+  const keepAliveRef = useRef(false);
   const navigate = useNavigate();
+
+  const text = (finalText + (interimText ? " " + interimText : "")).trim();
 
   useEffect(() => {
     const SR =
@@ -31,32 +36,48 @@ function Symptoms() {
     rec.lang = lang;
 
     rec.onresult = (event: any) => {
-      let finalText = "";
+      let newFinal = "";
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const res = event.results[i];
-        if (res.isFinal) finalText += res[0].transcript;
+        if (res.isFinal) newFinal += res[0].transcript + " ";
         else interim += res[0].transcript;
       }
-      setText((prev) => (finalText ? (prev + " " + finalText).trim() : prev) + (interim ? " " + interim : ""));
+      if (newFinal) {
+        finalRef.current = (finalRef.current + " " + newFinal).replace(/\s+/g, " ").trim();
+        setFinalText(finalRef.current);
+      }
+      setInterimText(interim);
     };
     rec.onerror = (e: any) => {
-      if (e.error === "not-allowed") setError("Microphone permission denied.");
-      else if (e.error === "no-speech") setError("Didn't catch that — try again.");
-      else setError("Voice error: " + e.error);
-      setListening(false);
+      if (e.error === "not-allowed") {
+        setError("Microphone permission denied.");
+        keepAliveRef.current = false;
+      } else if (e.error === "no-speech" || e.error === "aborted") {
+        // ignore — keep going
+      } else {
+        setError("Voice error: " + e.error);
+      }
     };
-    rec.onend = () => setListening(false);
+    rec.onend = () => {
+      setInterimText("");
+      if (keepAliveRef.current) {
+        try { rec.start(); } catch {}
+      } else {
+        setListening(false);
+      }
+    };
 
     recognitionRef.current = rec;
     return () => {
+      keepAliveRef.current = false;
       try { rec.stop(); } catch {}
     };
   }, [lang]);
 
   const start = () => {
     setError(null);
-    setText((t) => t.replace(/\s+$/, ""));
+    keepAliveRef.current = true;
     try {
       recognitionRef.current?.start();
       setListening(true);
@@ -65,8 +86,19 @@ function Symptoms() {
     }
   };
   const stop = () => {
+    keepAliveRef.current = false;
     try { recognitionRef.current?.stop(); } catch {}
     setListening(false);
+  };
+  const clear = () => {
+    finalRef.current = "";
+    setFinalText("");
+    setInterimText("");
+  };
+  const onManualEdit = (v: string) => {
+    finalRef.current = v;
+    setFinalText(v);
+    setInterimText("");
   };
 
   const submit = () => {
@@ -128,12 +160,15 @@ function Symptoms() {
         </div>
 
         <div className="w-full mt-6">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-            <Keyboard className="h-3.5 w-3.5" /> Transcript / type to edit
+          <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+            <span className="flex items-center gap-2"><Keyboard className="h-3.5 w-3.5" /> Transcript / type to edit</span>
+            {text && (
+              <button onClick={clear} className="text-xs text-primary font-medium">Clear</button>
+            )}
           </div>
           <textarea
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => onManualEdit(e.target.value)}
             placeholder="e.g. I have a fever and sore throat since morning…"
             rows={4}
             className="w-full rounded-2xl border border-input bg-card px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
