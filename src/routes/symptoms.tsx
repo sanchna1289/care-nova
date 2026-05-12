@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { MobileShell, ScreenHeader } from "@/components/MobileShell";
-import { Mic, Keyboard, Languages, Square } from "lucide-react";
+import { Mic, Keyboard, Languages, Square, Sparkles } from "lucide-react";
+import { analyzeSymptoms } from "@/lib/symptoms";
 
 export const Route = createFileRoute("/symptoms")({
   component: Symptoms,
@@ -142,8 +143,9 @@ function Symptoms() {
           )}
         </button>
 
-        <p className="mt-5 text-sm font-medium">
-          {!supported ? "Voice not supported — type below" : listening ? "Listening… tap to stop" : "Tap to speak"}
+        <p className="mt-5 text-sm font-medium flex items-center gap-2">
+          {listening && <Sparkles className="h-4 w-4 text-primary animate-pulse" />}
+          {!supported ? "Voice not supported — type below" : listening ? "Analyzing speech…" : "Tap to speak"}
         </p>
 
         <div className="mt-3 flex items-end gap-1 h-8">
@@ -158,6 +160,25 @@ function Symptoms() {
             />
           ))}
         </div>
+
+        {text.trim() && (() => {
+          const detected = analyzeSymptoms(text).found;
+          if (!detected.length) return null;
+          return (
+            <div className="w-full mt-4 rounded-2xl bg-primary/5 border border-primary/20 p-3">
+              <p className="text-[10px] uppercase tracking-wider font-semibold text-primary">Detected live · {detected.length}</p>
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {detected.map((d) => (
+                  <span key={d.label} className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
+                    d.severity === "emergency" ? "bg-emergency/15 text-emergency" :
+                    d.severity === "warning" ? "bg-warning/20 text-warning-foreground" :
+                    "bg-secondary text-secondary-foreground"
+                  }`}>{d.label}</span>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         <div className="w-full mt-6">
           <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">

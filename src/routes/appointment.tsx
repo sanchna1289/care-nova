@@ -1,12 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { MobileShell, ScreenHeader } from "@/components/MobileShell";
-import { Check, Calendar, Video, FileText, MapPin } from "lucide-react";
+import { Check, Calendar, Video, FileText, MapPin, Bell } from "lucide-react";
+import { analyzeSymptoms, loadSymptoms } from "@/lib/symptoms";
 
 export const Route = createFileRoute("/appointment")({
   component: Appointment,
 });
 
 function Appointment() {
+  const result = useMemo(() => analyzeSymptoms(loadSymptoms()), []);
+  const symptomsLine = result.found.map((f) => f.label).join(", ") || "Fever, sore throat, fatigue";
+  const sev = result.severity === "emergency" ? "Emergency" : result.severity === "warning" ? "Moderate" : "Mild";
   return (
     <MobileShell>
       <ScreenHeader title="Appointment confirmed" subtitle="We've shared your summary with the doctor" />
@@ -45,16 +50,19 @@ function Appointment() {
             <p className="text-sm font-semibold">Shared with doctor</p>
           </div>
           <ul className="space-y-1.5 text-xs text-foreground/80">
-            <li>• Symptoms: Fever, sore throat, fatigue</li>
-            <li>• AI severity: Moderate</li>
+            <li>• Symptoms: {symptomsLine}</li>
+            <li>• AI severity: {sev}</li>
+            <li>• Specialist: {result.specialist}</li>
+            {result.tests.length > 0 && <li>• Tests queued: {result.tests.slice(0, 3).join(", ")}</li>}
             <li>• Allergies: Penicillin</li>
-            <li>• Conditions: Mild asthma</li>
             <li>• BMI: 22.1 (Healthy)</li>
           </ul>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mt-4">
-          <button className="rounded-2xl border border-border bg-card py-3.5 text-sm font-semibold">Reschedule</button>
+          <Link to="/reminders" className="rounded-2xl border border-border bg-card py-3.5 text-sm font-semibold text-center flex items-center justify-center gap-2">
+            <Bell className="h-4 w-4" /> Set reminders
+          </Link>
           <Link to="/home" className="rounded-2xl bg-foreground text-background py-3.5 text-sm font-semibold text-center">Done</Link>
         </div>
       </div>

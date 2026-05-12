@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
-import { Mic, Calendar, Shield, Activity, AlertTriangle, Building2 } from "lucide-react";
+import { Mic, Calendar, AlertTriangle, Building2, Activity, FlaskConical, Bell, Pill } from "lucide-react";
 
 export const Route = createFileRoute("/home")({
   component: Home,
@@ -33,11 +33,16 @@ function Home() {
           </div>
         </Link>
 
-        <div className="grid grid-cols-2 gap-3 mt-4">
-          <QuickAction to="/appointment" icon={Calendar} label="Book doctor" tone="primary" />
-          <QuickAction to="/emergency" icon={AlertTriangle} label="Emergency" tone="emergency" />
-          <QuickAction to="/benefits" icon={Shield} label="Schemes" tone="soft" />
-          <QuickAction to="/hospital" icon={Building2} label="Hospital view" tone="soft" />
+        <div className="grid grid-cols-4 gap-2 mt-4">
+          <QuickAction to="/appointment" icon={Calendar} label="Doctor" tone="soft" />
+          <QuickAction to="/tests" icon={FlaskConical} label="Tests" tone="soft" />
+          <QuickAction to="/reminders" icon={Bell} label="Reminders" tone="soft" />
+          <QuickAction to="/emergency" icon={AlertTriangle} label="SOS" tone="emergency" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 mt-3">
+          <QuickAction to="/hospital" icon={Building2} label="Hospital view" tone="soft" wide />
+          <QuickAction to="/reminders" icon={Pill} label="My medications" tone="soft" wide />
         </div>
 
         <h3 className="mt-7 mb-3 text-sm font-semibold tracking-tight">Today's vitals</h3>
@@ -69,7 +74,7 @@ function Home() {
   );
 }
 
-function QuickAction({ to, icon: Icon, label, tone }: any) {
+function QuickAction({ to, icon: Icon, label, tone, wide }: any) {
   const tones: Record<string, string> = {
     primary: "bg-card border-border",
     soft: "bg-card border-border",
@@ -81,11 +86,11 @@ function QuickAction({ to, icon: Icon, label, tone }: any) {
     emergency: "text-emergency bg-emergency/15",
   };
   return (
-    <Link to={to} className={`rounded-2xl border ${tones[tone]} p-4 shadow-card`}>
+    <Link to={to} className={`rounded-2xl border ${tones[tone]} ${wide ? "p-4" : "p-3"} shadow-card`}>
       <div className={`h-9 w-9 rounded-xl ${iconCls[tone]} flex items-center justify-center mb-2`}>
         <Icon className="h-4 w-4" />
       </div>
-      <p className="text-sm font-semibold">{label}</p>
+      <p className={`${wide ? "text-sm" : "text-xs"} font-semibold`}>{label}</p>
     </Link>
   );
 }

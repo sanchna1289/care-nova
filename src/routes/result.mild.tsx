@@ -1,47 +1,65 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { MobileShell, ScreenHeader } from "@/components/MobileShell";
-import { Leaf, Pill, AlertCircle, Bookmark, Stethoscope } from "lucide-react";
+import { Leaf, Pill, AlertCircle, Bell, Stethoscope, FlaskConical } from "lucide-react";
+import { analyzeSymptoms, loadSymptoms } from "@/lib/symptoms";
 
 export const Route = createFileRoute("/result/mild")({
   component: Mild,
 });
 
 function Mild() {
+  const result = useMemo(() => analyzeSymptoms(loadSymptoms()), []);
+  const remedies = result.remedies.length ? result.remedies : ["Rest 7–8 hrs and hydrate well", "Light, easy-to-digest meals", "Monitor for any worsening"];
+  const otc = result.otc.length ? result.otc : [{ name: "Paracetamol 500mg", dose: "Every 6 hrs as needed" }];
+  const labels = result.found.map((f) => f.label).join(", ") || "general mild symptoms";
+
   return (
     <MobileShell hideTabs>
       <ScreenHeader title="Mild condition" subtitle="You can manage this at home" back="/analysis" />
-      <div className="px-6 space-y-4">
+      <div className="px-6 space-y-4 pb-6">
         <div className="rounded-2xl bg-success/10 border border-success/30 p-4 flex items-start gap-3">
           <span className="h-2.5 w-2.5 rounded-full bg-success mt-1.5" />
           <div>
             <p className="font-semibold text-sm">Reassuring news</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Symptoms suggest a mild viral cold. Rest and hydration usually resolve this in 2–3 days.</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Personalized care plan for: {labels}.</p>
           </div>
         </div>
 
         <Section title="Home remedies" icon={Leaf}>
-          {["Warm water with honey & ginger — 3x daily", "Steam inhalation, 10 mins twice a day", "Saltwater gargle for sore throat", "Rest 7–8 hrs and hydrate well"].map((t) => (
-            <Bullet key={t}>{t}</Bullet>
-          ))}
+          {remedies.map((t) => <Bullet key={t}>{t}</Bullet>)}
         </Section>
 
         <Section title="Suggested OTC" icon={Pill}>
-          <Bullet>Paracetamol 500mg — for fever, every 6 hrs</Bullet>
-          <Bullet>Lozenges — for throat relief</Bullet>
+          {otc.map((m) => (
+            <div key={m.name} className="flex items-start justify-between gap-2 text-sm">
+              <div>
+                <p className="font-medium">{m.name}</p>
+                <p className="text-xs text-muted-foreground">{m.dose}</p>
+              </div>
+              <Link to="/reminders" className="text-xs text-primary font-semibold whitespace-nowrap">+ Remind</Link>
+            </div>
+          ))}
         </Section>
+
+        {result.tests.length > 0 && (
+          <Section title="Optional tests" icon={FlaskConical}>
+            {result.tests.slice(0, 3).map((t) => <Bullet key={t}>{t}</Bullet>)}
+          </Section>
+        )}
 
         <div className="rounded-2xl border border-warning/40 bg-warning/10 p-4 flex gap-3">
           <AlertCircle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-sm">Allergy alert</p>
-            <p className="text-xs text-muted-foreground">Penicillin avoided in your suggestions. We've flagged this on your profile.</p>
+            <p className="text-xs text-muted-foreground">Penicillin avoided in your suggestions. Flagged on your profile.</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 pt-2">
-          <button className="rounded-2xl border border-border bg-card py-3.5 text-sm font-semibold flex items-center justify-center gap-2">
-            <Bookmark className="h-4 w-4" /> Save advice
-          </button>
+          <Link to="/reminders" className="rounded-2xl border border-border bg-card py-3.5 text-sm font-semibold flex items-center justify-center gap-2">
+            <Bell className="h-4 w-4" /> Set reminders
+          </Link>
           <Link to="/appointment" className="rounded-2xl bg-gradient-primary text-primary-foreground py-3.5 text-sm font-semibold flex items-center justify-center gap-2 shadow-soft">
             <Stethoscope className="h-4 w-4" /> Talk to doctor
           </Link>
