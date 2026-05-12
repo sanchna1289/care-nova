@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { MobileShell, ScreenHeader } from "@/components/MobileShell";
-import { Mic, Keyboard, Languages, Square } from "lucide-react";
+import { Mic, Keyboard, Languages, Square, Sparkles } from "lucide-react";
+import { analyzeSymptoms } from "@/lib/symptoms";
 
 export const Route = createFileRoute("/symptoms")({
   component: Symptoms,
