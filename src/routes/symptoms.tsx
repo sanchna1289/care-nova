@@ -160,12 +160,15 @@ function Symptoms() {
         </div>
 
         <div className="w-full mt-6">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-            <Keyboard className="h-3.5 w-3.5" /> Transcript / type to edit
+          <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+            <span className="flex items-center gap-2"><Keyboard className="h-3.5 w-3.5" /> Transcript / type to edit</span>
+            {text && (
+              <button onClick={clear} className="text-xs text-primary font-medium">Clear</button>
+            )}
           </div>
           <textarea
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => onManualEdit(e.target.value)}
             placeholder="e.g. I have a fever and sore throat since morning…"
             rows={4}
             className="w-full rounded-2xl border border-input bg-card px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
